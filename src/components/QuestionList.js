@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import QuestionItem from "./QuestionItem"
 
 function QuestionList() {
-  const [questions, setQuestions] = useState({})
+  const [questions, setQuestions] = useState([])
   const url = "http://localhost:4000/questions"
 
   useEffect(()=>{
@@ -12,20 +12,30 @@ function QuestionList() {
     .then((data)=>setQuestions(data))
   }, [])
 
-  console.log(questions)
+  function handleDeleteQuestion(deletedItem) {
+    console.log("Deleted Item:", deletedItem)
+    const updatedQuestions = questions.filter((question)=> question.id !== deletedItem);
+    return setQuestions(updatedQuestions);
+  }
 
-  // function renderQuestions(arr){
-  //   const newArr = arr.map((question)=>{
-  //     <QuestionItem question={question} />
-  //   })
-  //   return newArr
-  // }
+  function handleCorrectAnswer(updatedItem) {
+    console.log("Updated Answer:", updatedItem)
+    return setQuestions(questions)
+  }
 
+  function renderQuestions(arr){
+    const newArr = arr.map((question)=>{
+      return <QuestionItem question={question} onDeleteItem={handleDeleteQuestion} onChangeAnswer={handleCorrectAnswer}/>
+    })
+    return newArr
+  }
 
   return (
     <section>
       <h1>Quiz Questions</h1>
-      {/* <ul>{renderQuestions(questions)}</ul> */}
+      <ul className="Questions">
+        {renderQuestions(questions)}
+      </ul>
     </section>
   );
 }
